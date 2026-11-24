@@ -446,7 +446,7 @@ function showResults(){
       </div>
     </div>
     <div class="kw-again"><button class="kw-btn kw-restart" data-restart type="button"><span aria-hidden="true">↺</span> Take the quiz again</button></div>
-    <p class="kw-fine">Nightly prices are typical ranges before taxes and resort fees. Key West rates change a lot by season, holidays and events, and hotel policies (adults-only, pets) can change, so confirm with the hotel before you book. More Key West planning at <a href="${SITE_URL}" target="_blank" rel="noopener">funinkeywest.com</a>.</p>`;
+    <p class="kw-fine">Some hotel links are affiliate links: if you book through them, I may earn a small commission at no extra cost to you. Thank you for supporting Fun in Key West! Nightly prices are typical ranges before taxes and resort fees. Key West rates change a lot by season, holidays and events, and hotel policies (adults-only, pets) can change, so confirm with the hotel before you book. More Key West planning at <a href="${SITE_URL}" target="_blank" rel="noopener">funinkeywest.com</a>.</p>`;
   $("#kwsf-quiz").hidden = true;
   el.hidden = false;
   el.querySelectorAll("[data-next]").forEach(a => a.addEventListener("click", () => {
