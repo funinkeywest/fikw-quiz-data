@@ -11,9 +11,10 @@ m.innerHTML="<div id=\"fikw-wh\">\n\n<div class=\"wrap\">\n  <div class=\"stripe
 const SITE_URL   = "https://funinkeywest.com";
 const STAY_URL   = "#stay-finder";   /* Stay Finder page, for people who haven't booked yet */
 const SIGNUP_URL = "https://funinkeywest.kit.com/cb52d6c3b6";   /* Kit landing page (Trip Countdown) used until the new one is ready */
-const KIT_FORM_ID = "";                                         /* Kit form id for "Email me my guide". Leave empty to link to SIGNUP_URL */
+const KIT_FORM_ID = "10237799";   /* Kit form: "What's Happening While I'm There? - Keys Trip Guide" landing page */
+const GUIDE_PAGE  = "https://funinkeywest.com/find-your-key-west/";   /* where a saved guide link reopens */
 const GUIDE_OFFER = {price:"$39", url:"", email:"funinkeywest.com@gmail.com"}; /* url = checkout or intake form for the Custom Guide */
-const INSIDER_CLUB_URL = "https://funinkeywest.com/#want-more"; /* Insider Club sales page */
+const INSIDER_CLUB_URL = "https://funinkeywest.kit.com/products/fun-in-key-west-insider-club"; /* Insider Club sales page */
 /* Sponsor placements. slot: "top" | "sunset" | "water" | "food" | "night". months: [] = all year. Leave the array empty for none. */
 const SPONSORS = [
   /* {slot:"sunset", name:"Business name", blurb:"One line in Michele's voice.", url:"https://...", months:[12,1,2,3]} */
@@ -115,6 +116,25 @@ try {
   const q = new URLSearchParams(location.search), okD = v => /^\d{4}-\d{2}-\d{2}$/.test(v||"");
   if(okD(q.get("arrive")) && okD(q.get("depart")) && q.get("depart") > q.get("arrive") && q.get("arrive") >= iso(new Date())){ state.arrive = q.get("arrive"); state.depart = q.get("depart"); fromStay = true; }
   if(["couple","family","friends","celebrate","solo","lgbtq"].includes(q.get("who"))){ state.party = q.get("who"); fromStay = true; }
+} catch(e){}
+
+/* A guide link: the answers, packed into the URL, so the guide can be reopened (and emailed) */
+function planCode(){
+  const j = v => (v || []).join(".");
+  return [state.mode==="month"?"m":"d", (state.arrive||"").replace(/-/g,""), (state.depart||"").replace(/-/g,""), (state.month||"").replace(/-/g,""), state.nights,
+    state.area, state.party, state.first, state.sunset, j(state.water), j(state.food), j(state.night), j(state.gems), state.occasion, state.spend].map(v => v ?? "").join("~");
+}
+function readPlan(code){
+  const p = code.split("~"), dt = v => v && v.length===8 ? `${v.slice(0,4)}-${v.slice(4,6)}-${v.slice(6)}` : "", ls = v => v ? v.split(".") : [];
+  if(p.length < 15) return null;
+  return {mode:p[0]==="m"?"month":"dates", arrive:dt(p[1]), depart:dt(p[2]), month:p[3]?`${p[3].slice(0,4)}-${p[3].slice(4)}`:"", nights:p[4]||"5",
+    area:p[5]||null, party:p[6]||null, first:p[7]||null, sunset:p[8]||null, water:ls(p[9]), food:ls(p[10]), night:ls(p[11]), gems:ls(p[12]), occasion:p[13]||null, spend:p[14]||null};
+}
+function planLink(){ return GUIDE_PAGE + "?plan=" + planCode() + "#whats-happening"; }
+let restoredPlan = false;
+try {
+  const code = new URLSearchParams(location.search).get("plan");
+  if(code){ const o = readPlan(code); if(o){ Object.assign(state, o); restoredPlan = !!(state.area && state.party && (state.mode==="month" ? state.month : (state.arrive && state.depart))); } }
 } catch(e){}
 
 function renderStep(){
@@ -443,9 +463,9 @@ function build(){
     <section class="club">${chip("Stay in the know")}<h3 style="margin:4px 0 6px">Fun in Key West Insider Club</h3>
       <p class="note" style="margin:0 0 12px">The full digital magazine, first word on events and openings, and the hidden gems I don't post anywhere else. ${daysBetween(new Date(),a)>30?"You've got time before your trip to enjoy a few issues.":""}</p>
       <a class="btn sm teal" href="${esc(INSIDER_CLUB_URL)}" target="_blank" rel="noopener">Join the Insider Club →</a></section>
-    <section class="club" style="border-color:var(--line)">${chip("Free")}<h3 style="margin:4px 0 6px">Email me my guide</h3>
-      <p class="note" style="margin:0 0 12px">Get this guide in your inbox, plus my countdown tips as your trip gets closer.</p>
-      ${ON_SITE && KIT_FORM_ID ? `<form class="signup" id="wh-signup"><input type="email" required placeholder="you@email.com" aria-label="Email address" id="wh-email"><button class="btn sm" type="submit">Send it</button></form><p class="note" id="wh-signupMsg"></p>`
+    <section class="club" style="border-color:var(--line)">${chip("Free")}<h3 style="margin:4px 0 6px">Email me my guide (and the PDF)</h3>
+      <p class="note" style="margin:0 0 12px">I'll send you a link to this exact guide, ready to save as a PDF, plus my Key West Trip Countdown tips as your trip gets closer.</p>
+      ${ON_SITE && KIT_FORM_ID ? `<form class="signup" id="wh-signup"><input type="text" placeholder="First name" aria-label="First name" id="wh-firstName" autocomplete="given-name"><input type="email" required placeholder="you@email.com" aria-label="Email address" id="wh-email" autocomplete="email"><button class="btn sm" type="submit">Send my guide</button></form><p class="note" id="wh-signupMsg" aria-live="polite"></p>`
         : `<a class="btn sm" href="${esc(SIGNUP_URL)}" target="_blank" rel="noopener">Send me my guide →</a>`}</section>
   </div>
 
@@ -492,11 +512,14 @@ function build(){
     });
     const f = $("#wh-signup");
     if(f) f.addEventListener("submit", async ev => { ev.preventDefault(); const msg = $("#wh-signupMsg");
-      try { const fd = new FormData(); fd.append("email_address", $("#wh-email").value);
-        summaryTags().forEach(t => fd.append("fields[trip_notes]", t)); fd.append("fields[trip_start]", iso(a)); fd.append("fields[trip_area]", AREA[state.area]);
+      const btn = f.querySelector("button"); btn.disabled = true; msg.textContent = "Sending…";
+      try { const fd = new FormData(); fd.append("email_address", $("#wh-email").value.trim());
+        if($("#wh-firstName").value.trim()) fd.append("first_name", $("#wh-firstName").value.trim());
+        fd.append("fields[trip_guide_link]", planLink()); fd.append("fields[trip_start]", iso(a)); fd.append("fields[trip_area]", AREA[state.area]);
         const r = await fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`, {method:"POST", body:fd, headers:{Accept:"application/json"}});
-        msg.textContent = r.ok ? "You're in! Check your inbox." : "Hmm, that didn't go through. Try again?"; }
-      catch(e){ msg.textContent = "Hmm, that didn't go through. Try again?"; } });
+        msg.textContent = r.ok ? "You're in! Check your inbox for your guide. (If you don't see it in a few minutes, peek in Promotions or Spam.)" : "Hmm, that didn't go through. Try again?"; }
+      catch(e){ msg.textContent = "Hmm, that didn't go through. Try again?"; }
+      btn.disabled = false; });
   }
 }
 function summaryTags(){
@@ -512,5 +535,6 @@ window.addEventListener("fikw:prefill", ev => {
   setTimeout(() => ROOT.scrollIntoView({behavior:"smooth", block:"start"}), 50);
 });
 renderStep();
+if(restoredPlan) build();
 }
 
