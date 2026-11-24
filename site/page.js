@@ -27,15 +27,25 @@
     else if (h === "#whats-happening") show("wh", scroll);
   }
 
-  // Buttons in the promo box
+  // Any link to a quiz on this page: promo buttons, the Stay Finder's "Plan my days",
+  // and the quiz's "find your stay first" link. Runs first (capture), before the theme's own link handling.
   document.addEventListener("click", function(e){
-    var a = e.target.closest && e.target.closest("[data-open-quiz]");
-    if (!a || !document.getElementById("kwsf-mount")) return;   // not on the quiz page: let the link work normally
-    e.preventDefault();
+    if (!document.getElementById("kwsf-mount")) return;   // not on the quiz page: let links work normally
+    var a = e.target.closest && e.target.closest("a");
+    if (!a) return;
     var which = a.getAttribute("data-open-quiz");
+    if (!which) {
+      var href = a.getAttribute("href") || "";
+      if (/#stay-finder$/.test(href)) which = "stay";
+      else if (/#whats-happening$/.test(href)) which = "wh";
+      else return;
+    }
+    var handoff = a.hasAttribute("data-next");             // Stay Finder passes answers along in its own click handler
+    e.preventDefault();
+    if (!handoff) e.stopPropagation();
     history.replaceState(null, "", which === "stay" ? "#stay-finder" : "#whats-happening");
-    show(which);
-  });
+    show(which, !handoff);
+  }, true);
   // Stay Finder's "Plan my days" hands off to the second quiz
   window.addEventListener("fikw:prefill", function(){ show("wh", false); });
   // "Still need a place to stay?" link and any other in-page links
