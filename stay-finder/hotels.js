@@ -1,8 +1,9 @@
 /* =====================================================================
-   KEY WEST STAY FINDER — HOTEL LIST
+   KEYS STAY FINDER — HOTEL LIST
    The Stay Finder on funinkeywest.com loads this file. If it can't, it
    falls back to the copy built into the page. Edit here to add or remove
-   places; changes show on the site within a few minutes.
+   places. r = region: kw (default), upper, middle, lower; town = for hotel search links.
+   Changes show on the site within a few minutes.
    Last updated: 2026-11-24
    ===================================================================== */
 
@@ -126,5 +127,81 @@ window.FIKW_HOTELS = [
   {n:"Blue Flamingo Resort", a:"New Town, North Roosevelt Blvd", z:"hotel", p:[1], t:["beach","night"], f:[], range:"$150–$280",
    perks:["Reopened in 2025 after a full makeover","Resort-style pools","Budget-friendly rates"]},
   {n:"Havana Cabana Key West", a:"New Town, North Roosevelt Blvd", z:"hotel", p:[1], t:["beach","night","food"], f:["pets"], range:"$150–$280",
-   perks:["Lively, colorful pool scene","Great value for Key West","Pet-friendly with Cuban-inspired style"]}
+   perks:["Lively, colorful pool scene","Great value for Key West","Pet-friendly with Cuban-inspired style"]},
+  /* ===== UPPER KEYS: Key Largo ===== */
+  {n:"Bungalows Key Largo", a:"Key Largo, on Florida Bay", r:"upper", town:"Key Largo", z:"resort", p:[4], t:["spa","sunset","kayak","food","wellness"], f:["water","adults","quiet"], range:"$1,000+ all-inclusive",
+   perks:["Adults-only and all-inclusive","Private bungalows on the water","Sunset over Florida Bay every night"]},
+  {n:"Playa Largo Resort & Spa, Autograph Collection", a:"Key Largo, bayside", r:"upper", town:"Key Largo", z:"resort", p:[3,4], t:["beach","spa","sunset","kayak","snorkel"], f:["water"], range:"$400–$750",
+   perks:["Private bayside beach","Full-service spa","Front-row Gulf-side sunsets"]},
+  {n:"Baker's Cay Resort Key Largo, Curio Collection by Hilton", a:"Key Largo, bayside", r:"upper", town:"Key Largo", z:"resort", p:[3], t:["beach","kayak","sunset","snorkel"], f:["water"], range:"$350–$600",
+   perks:["Waterfront pools and a small beach","Kayaks and paddleboards on the bay","Easy drive to John Pennekamp"]},
+  {n:"Kona Kai Resort, Gallery & Botanic Gardens", a:"Key Largo, bayside", r:"upper", town:"Key Largo", z:"boutique", p:[3], t:["arts","kayak","sunset","wellness"], f:["water","adults","quiet"], range:"$350–$600",
+   perks:["Adults-only hideaway","Botanic gardens and an art gallery on site","Quiet bayside beach for sunset"]},
+  {n:"Key Largo Bay Marriott Beach Resort", a:"Key Largo, bayside", r:"upper", town:"Key Largo", z:"resort", p:[2,3], t:["beach","snorkel","sail","sunset"], f:["water"], range:"$250–$450",
+   perks:["Bayside beach and pool","Snorkel and dive trips nearby","Sunset views over the bay"]},
+  {n:"Ocean Pointe Suites at Key Largo", a:"Tavernier, oceanside", r:"upper", town:"Tavernier", z:"hotel", p:[2], t:["beach","kayak","fish"], f:["water","kitchen","quiet"], range:"$220–$400",
+   perks:["Suites with room to spread out","Oceanfront pool and marina","Halfway between Key Largo and Islamorada"]},
+  {n:"Amoray Dive Resort", a:"Key Largo, bayside", r:"upper", town:"Key Largo", z:"hotel", p:[1,2], t:["snorkel","beach"], f:["water"], range:"$150–$300",
+   perks:["Built for divers and snorkelers","Small private beach on the bay","Good value near John Pennekamp"]},
+  {n:"The Pelican Key Largo Cottages", a:"Key Largo, bayside", r:"upper", town:"Key Largo", z:"inn", p:[1,2], t:["beach","kayak","fish"], f:["water","kitchen"], range:"$150–$300",
+   perks:["Old-Keys cottages on the water","A little beach on the bay","Easy, relaxed and affordable"]},
+  {n:"Drift Hotel", a:"Key Largo", r:"upper", town:"Key Largo", z:"boutique", p:[1], t:["food","snorkel"], f:[], range:"$150–$280",
+   perks:["Retro motel with a fresh redo","Great value base for the Upper Keys","Close to Key Largo's dive shops"]},
+  {n:"Jules' Undersea Lodge", a:"Key Largo, underwater lagoon", r:"upper", town:"Key Largo", z:"boutique", p:[4], t:["snorkel"], f:["water"], range:"$700+",
+   perks:["You sleep underwater, for real","Scuba to your room (certified divers, or take the short course)","A once-in-a-lifetime story"], note:"Check the dive requirements before you book"},
+
+  /* ===== UPPER KEYS: Islamorada ===== */
+  {n:"Cheeca Lodge & Spa", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"resort", p:[4], t:["beach","spa","fish","snorkel","kayak","wellness"], f:["water"], range:"$600–$1,100",
+   perks:["Classic Islamorada luxury on the ocean","Long fishing pier and a full spa","Beach, pools and water sports"]},
+  {n:"The Moorings Village", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"inn", p:[4], t:["beach","spa","wellness"], f:["water","kitchen","quiet"], range:"$700+",
+   perks:["Private cottages in a palm grove","A quiet, uncrowded beach","Feels like a private estate"]},
+  {n:"Casa Morada", a:"Islamorada, bayside", r:"upper", town:"Islamorada", z:"boutique", p:[3,4], t:["sunset","wellness","kayak"], f:["water","quiet"], range:"$450–$800",
+   perks:["Stylish boutique on the bay","Saltwater pool and sunset views","Small and calm"]},
+  {n:"Three Waters Resort & Marina", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"resort", p:[3], t:["fish","sail","snorkel","night","food","beach"], f:["water","pets"], range:"$350–$650",
+   perks:["15 oceanfront acres (the old Holiday Isle)","Tiki bar that invented the Rum Runner","Adults-focused Cove section, plus pools for families"]},
+  {n:"Amara Cay Resort", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"resort", p:[2,3], t:["fish","beach","kayak","sunset"], f:["water"], range:"$300–$500",
+   perks:["Oceanfront pool and fire pits","\"Fish Like a Local\" classes","Sister resorts nearby share the fun"]},
+  {n:"La Siesta Resort & Villas", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"resort", p:[2,3], t:["kayak","beach","fish"], f:["water","kitchen"], range:"$280–$480",
+   perks:["Suites and villas with room to cook","Pool and paddle craft on site","Great for families and groups"]},
+  {n:"Islander Resort", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"resort", p:[3], t:["beach","fish","sail","food"], f:["water"], range:"$350–$550",
+   perks:["Beach, pools and palm-shaded cabanas","Boat taxi to sister restaurants","Classic Islamorada resort feel"]},
+  {n:"Chesapeake Beach Resort", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"hotel", p:[2], t:["beach","snorkel"], f:["water"], range:"$230–$400",
+   perks:["Oceanfront with a lagoon and beach","Family friendly and relaxed","Easy on the budget for Islamorada"]},
+  {n:"Drop Anchor Resort & Marina", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"inn", p:[1,2], t:["fish","beach","kayak"], f:["water","kitchen","quiet"], range:"$200–$350",
+   perks:["Small, old-Keys charm","Beach and dock on the ocean","Many rooms with kitchens"]},
+  {n:"Ragged Edge Resort & Marina", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"inn", p:[1,2], t:["fish","kayak"], f:["water","kitchen","quiet"], range:"$180–$330",
+   perks:["Quiet, no-frills waterfront","Great for anglers","Many units with kitchens"]},
+  {n:"Breezy Palms Resort", a:"Islamorada, oceanfront", r:"upper", town:"Islamorada", z:"inn", p:[2], t:["beach","fish","kayak"], f:["water","kitchen"], range:"$220–$380",
+   perks:["Cottages and suites with kitchens","Small beach and pool","Laid-back and family friendly"]},
+
+  /* ===== MIDDLE KEYS: Long Key, Duck Key, Marathon ===== */
+  {n:"Lime Tree Bay Resort", a:"Long Key, bayside", r:"middle", town:"Long Key", z:"inn", p:[1,2], t:["kayak","sunset","fish"], f:["water","quiet"], range:"$180–$330",
+   perks:["Hammocks and sunsets on the bay","Quiet, between Islamorada and Marathon","Great value"]},
+  {n:"Hawks Cay Resort", a:"Duck Key, near Marathon", r:"middle", town:"Duck Key", z:"resort", p:[3,4], t:["snorkel","fish","sail","kayak","beach","spa"], f:["water","kitchen"], range:"$400–$750",
+   perks:["Saltwater lagoon, pools and a marina","Villas with kitchens for families","Dolphin experiences on site"]},
+  {n:"Isla Bella Beach Resort & Spa", a:"Marathon, Knights Key", r:"middle", town:"Marathon", z:"resort", p:[3,4], t:["beach","spa","kayak","fish","snorkel","sunset"], f:["water","kitchen"], range:"$350–$650",
+   perks:["Every room faces the ocean","Five oceanfront pools and a private beach","Next to the Seven Mile Bridge"]},
+  {n:"Tranquility Bay Beach House Resort", a:"Marathon, Gulf side", r:"middle", town:"Marathon", z:"resort", p:[3], t:["beach","kayak","sunset"], f:["water","kitchen","quiet"], range:"$330–$600",
+   perks:["Two- and three-bedroom beach houses with full kitchens","Long private beach","Three pools, including one for adults only"]},
+  {n:"Faro Blanco Resort & Yacht Club, Curio Collection by Hilton", a:"Marathon, bayside marina", r:"middle", town:"Marathon", z:"resort", p:[3], t:["sail","fish","sunset","food"], f:["water"], range:"$350–$550",
+   perks:["Historic lighthouse on the marina","Infinity pool and waterfront dining","Sunset over the bay"]},
+  {n:"Courtyard by Marriott Faro Blanco Resort", a:"Marathon, bayside", r:"middle", town:"Marathon", z:"hotel", p:[2], t:["sail","fish","sunset"], f:["water"], range:"$230–$400",
+   perks:["On the Faro Blanco waterfront","Easy, reliable and well run","Good base for the middle Keys"]},
+  {n:"Glunz Ocean Beach Hotel & Resort", a:"Marathon, oceanfront", r:"middle", town:"Marathon", z:"inn", p:[2], t:["beach","snorkel"], f:["water","kitchen","quiet"], range:"$230–$400",
+   perks:["Small and personal on the ocean","Rooms with kitchens","Private beach and pool"]},
+  {n:"Knight's Key Suites", a:"Marathon, by the Seven Mile Bridge", r:"middle", town:"Marathon", z:"hotel", p:[1,2], t:["fish","sunset"], f:["water"], range:"$170–$320",
+   perks:["Suites at the start of the Seven Mile Bridge","Good value","Easy for day trips both ways"]},
+  {n:"Hampton Inn Marathon – Florida Keys", a:"Marathon, bayside", r:"middle", town:"Marathon", z:"hotel", p:[1,2], t:["sunset","fish"], f:["water"], range:"$170–$330",
+   perks:["Bayside pool and dock","Free breakfast","Reliable and family friendly"]},
+
+  /* ===== LOWER KEYS ===== */
+  {n:"Little Palm Island Resort & Spa", a:"Private island off Little Torch Key", r:"lower", town:"Little Torch Key", z:"resort", p:[4], t:["snorkel","spa","wellness","sunset","fish"], f:["water","adults","quiet"], range:"$1,000+",
+   perks:["Adults-only private island, by boat or seaplane","Thatched bungalows and a lagoon pool","Snorkel trips to Looe Key reef"]},
+  {n:"Sugarloaf Key Hotel at KOA Resort", a:"Summerland Key, oceanfront", r:"lower", town:"Summerland Key", z:"hotel", p:[1,2], t:["snorkel","kayak","fish","beach"], f:["water","kitchen","pets"], range:"$180–$350",
+   perks:["Private beach, marina and pool","Paddleboards and snorkel gear on hand","About 30 minutes to Key West"]},
+  {n:"Parmer's Resort", a:"Little Torch Key, waterfront", r:"lower", town:"Little Torch Key", z:"inn", p:[1,2], t:["fish","kayak","snorkel"], f:["water","quiet"], range:"$160–$300",
+   perks:["Old-Keys cottages on the water","Close to Bahia Honda and Looe Key","Quiet and affordable"]},
+  {n:"Looe Key Reef Resort & Dive Center", a:"Ramrod Key", r:"lower", town:"Ramrod Key", z:"hotel", p:[1], t:["snorkel","night"], f:["water"], range:"$140–$260",
+   perks:["Dive shop on site for Looe Key trips","Lively tiki bar","Budget-friendly base for reef days"]}
+
 ];
