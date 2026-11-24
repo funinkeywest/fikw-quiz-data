@@ -95,7 +95,7 @@ function timeOf(x){
 function slotsFor(when, now){
   const ss = sunsetMins(now.date);
   if(when === "tomorrow") return ["morning","afternoon","sunset","night"];
-  if(when === "tonight") return ["sunset","night"];
+  if(when === "tonight") return now.mins >= ss + 15 || now.mins < 5*60 ? ["night"] : ["sunset","night"];
   const m = now.mins;
   const start = m < 5*60 ? "night" : m < 11*60 ? "morning" : m < ss - 100 ? "afternoon" : m < ss + 30 ? "sunset" : "night";
   const order = ["morning","afternoon","sunset","night"];
