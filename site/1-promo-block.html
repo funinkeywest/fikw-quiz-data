@@ -26,13 +26,19 @@
 .fikw-promo .fp-mini{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:6px}
 .fikw-promo .fp-mini span{height:16px;border-radius:3px;border:1.5px solid var(--ink);background:#fff}
 .fikw-promo .fp-mini .y{background:var(--yellow)}.fikw-promo .fp-mini .c{background:var(--cyan)}.fikw-promo .fp-mini .p{background:var(--pink)}.fikw-promo .fp-mini .l{background:var(--lime)}
+.fikw-promo .fp-card .fp-btn{margin-top:auto}
+.fikw-promo .fp-card.one .fp-btn{background:var(--yellow)}.fikw-promo .fp-card.two .fp-btn{background:var(--yellow)}
+.fikw-promo .fp-who{font:700 12px/1.2 "Inter",sans-serif;letter-spacing:.05em;text-transform:uppercase}
 .fikw-promo .fp-path{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:stretch;margin:4px 0 20px}
 .fikw-promo .fp-arrow{align-self:center;font:800 30px/1 "Poppins",sans-serif}
 .fikw-promo .fp-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
 .fikw-promo .fp-actions .fp-btn{margin:0;background:var(--coral);font-size:18px;padding:15px 26px}
 .fikw-promo .fp-skip{font-weight:700;color:var(--ink)!important;text-decoration:underline!important;text-decoration-color:var(--pink)!important;text-decoration-thickness:2px!important;text-underline-offset:3px}
 .fikw-promo .fp-foot{margin:16px 0 0;font-size:13.5px;color:#4f4e4b}
-@media(max-width:680px){.fikw-promo .fp-grid,.fikw-promo .fp-path{grid-template-columns:minmax(0,1fr)}.fikw-promo .fp-top{flex-direction:column-reverse;gap:8px}.fikw-promo h2.fp-h{line-height:1.12}.fikw-promo .fp-arrow{transform:rotate(90deg);justify-self:center}.fikw-promo .fp-logo{width:72px}}
+@media(max-width:680px){.fikw-promo .fp-grid,.fikw-promo .fp-card .fp-btn{margin-top:auto}
+.fikw-promo .fp-card.one .fp-btn{background:var(--yellow)}.fikw-promo .fp-card.two .fp-btn{background:var(--yellow)}
+.fikw-promo .fp-who{font:700 12px/1.2 "Inter",sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.fikw-promo .fp-path{grid-template-columns:minmax(0,1fr)}.fikw-promo .fp-top{flex-direction:column-reverse;gap:8px}.fikw-promo h2.fp-h{line-height:1.12}.fikw-promo .fp-arrow{transform:rotate(90deg);justify-self:center}.fikw-promo .fp-logo{width:72px}}
 @media (prefers-reduced-motion:reduce){.fikw-promo .fp-btn{transition:none}}
 </style>
 <section class="fikw-promo" aria-label="Plan your Keys trip with Michele">
@@ -40,30 +46,29 @@
   <div class="fp-in">
     <div class="fp-top">
       <div>
-        <span class="fp-chip">Free trip planner · about 4 minutes</span>
+        <span class="fp-chip">Free trip planners · about 2 minutes each</span>
         <h2 class="fp-h">Plan your Keys trip <mark>like an insider</mark></h2>
-        <p class="fp-lede">The same advice I give my own friends and family, in two quick steps. First I'll match you with the right place to stay, then I'll build your own guide to everything happening while you're in town.</p>
+        <p class="fp-lede">The same advice I give my own friends and family. Still looking for a place to stay? Start with my Stay Finder, and I'll walk you right into planning your days. Already booked? Jump straight to what's happening while you're in town.</p>
       </div>
       <img class="fp-logo" src="https://funinkeywest.github.io/fikw-quiz-data/brand/fikw-logo-badge.png" width="120" height="88" alt="Fun in Key West">
     </div>
     <div class="fp-path">
-      <div class="fp-card one">
-        <span class="fp-step" aria-hidden="true">1</span>
-        <h3>Find your stay</h3>
-        <p>Hotels, inns and guesthouses matched to your crew, your budget and your vibe, with live prices for your dates.</p>
+      <div class="fp-card one" data-quiz-card="stay">
+        <span class="fp-who">Not booked yet?</span>
+        <h3>Find your Key West stay</h3>
+        <p>Six quick questions and I'll match you with hotels, inns and guesthouses that fit your crew, your budget and your vibe, with live prices for your dates.</p>
+        <a class="fp-btn" data-open-quiz="stay" href="https://funinkeywest.com/find-your-key-west/#stay-finder">Find my stay <span aria-hidden="true">→</span></a>
       </div>
       <div class="fp-arrow" aria-hidden="true">→</div>
-      <div class="fp-card two">
-        <span class="fp-step" aria-hidden="true">2</span>
-        <h3>See what's happening</h3>
-        <p>Festivals and shows on your dates, your sunset cruise, food tours, hidden gems and a fridge calendar.</p>
+      <div class="fp-card two" data-quiz-card="wh">
+        <span class="fp-who">Already booked?</span>
+        <h3>What's happening while I'm there?</h3>
+        <p>Festivals and shows on your dates, your sunset cruise, food tours, hidden gems and a fridge calendar for your trip.</p>
         <div class="fp-mini" aria-hidden="true"><span></span><span class="y"></span><span></span><span class="c"></span><span class="y"></span><span class="l"></span><span></span></div>
+        <a class="fp-btn" data-open-quiz="wh" href="https://funinkeywest.com/find-your-key-west/#whats-happening">Plan my days <span aria-hidden="true">→</span></a>
       </div>
-    </div>
-    <div class="fp-actions">
-      <a class="fp-btn" href="https://funinkeywest.com/find-your-key-west/#stay-finder">Start planning my trip <span aria-hidden="true">→</span></a>
-      <a class="fp-skip" href="https://funinkeywest.com/find-your-key-west/#whats-happening">Already booked? Skip to what's happening</a>
     </div>
     <p class="fp-foot">— Michele, Fun in Key West · Chief Rooster Wrangler &amp; Island Story Collector</p>
   </div>
 </section>
+<script src="https://funinkeywest.github.io/fikw-quiz-data/site/page.js"></script>
