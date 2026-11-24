@@ -10,3 +10,7 @@ The lists behind the quizzes on [funinkeywest.com](https://funinkeywest.com). Th
 Each quiz also keeps a backup copy of its list built into the page, so it still works if this site can't be reached.
 
 **Updates:** a weekly scheduled task refreshes the events and checks the tours; a monthly one reviews the hotels. Michele gets a short note on what changed.
+
+## Website pages
+- `site/whats-happening.js` and `site/stay-finder.js` hold the quiz code. The Find Your Key West page loads them, so the WordPress blocks are just one line each (`site/2-…` and `site/3-…`).
+- `site/1-promo-block.html` is the promo block with links to both quizzes.
