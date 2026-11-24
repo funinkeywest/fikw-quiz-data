@@ -178,12 +178,12 @@ function renderStep(){
       <p class="note" style="margin:10px 0 0">Still need a place to stay? <a href="${STAY_URL}">Find your Key West stay first →</a></p>` : `
       <div class="dates">
         <label class="f">Month<select id="wh-month">${months.map(([v,t])=>`<option value="${v}" ${state.month===v?"selected":""}>${t}</option>`).join("")}</select></label>
-        <label class="f">How many nights?<select id="wh-nights">${["3","4","5","7","10","14"].map(n=>`<option ${state.nights===n?"selected":""}>${n}</option>`).join("")}</select></label>
+        <label class="f">How many nights?<select id="wh-nights">${[["3","3"],["4","4"],["5","5"],["7","7 (a week)"],["10","10"],["14","14 (two weeks)"],["21","21 (three weeks)"],["30","30 (a month)"],["45","45 (six weeks)"],["60","60 (two months)"],["90","90 (the whole season)"]].map(([n,t])=>`<option value="${n}" ${state.nights===n?"selected":""}>${t}</option>`).join("")}</select></label>
       </div>
       <button class="linkish" type="button" id="wh-toggleMode">I have my dates</button>`;
   } else if(s.type === "stops"){
     const N = totalNights(), sum = state.stops.reduce((t,x)=>t+(x.n||0),0), dm = state.mode==="dates";
-    const nOpts = cur => Array.from({length: dm ? N : 21},(_,i)=>i+1).map(n=>`<option ${cur===n?"selected":""}>${n}</option>`).join("");
+    const nOpts = cur => Array.from({length: dm ? N : 90},(_,i)=>i+1).map(n=>`<option ${cur===n?"selected":""}>${n}</option>`).join("");
     body = `<div class="options">${s.opts.map(([v,t,sub])=>{ const i = state.stops.findIndex(x=>x.a===v), on = i>=0;
       return `<button type="button" class="opt" data-v="${v}" aria-pressed="${on}"><b>${on&&multiStop()?`${i+1}. `:""}${t}</b>${sub?`<small>${sub}</small>`:""}</button>`;}).join("")}</div>
       ${multiStop() ? `<div class="legs" aria-label="Your stops">${state.stops.map((x,i)=>`<div class="leg"><b>${i+1}. ${esc(AREA[x.a])}</b>
@@ -230,7 +230,7 @@ function valid(){
     if(!state.arrive || !state.depart) return "Add both dates, or pick a month instead.";
     const n = daysBetween(D(state.arrive), D(state.depart));
     if(n < 1) return "Your leaving date needs to be after your arrival.";
-    if(n > 45) return "That's a long stay! Pick up to 45 nights, or plan one month at a time.";
+    if(n > 120) return "That's a long stay! Pick up to 120 nights, or plan one season at a time.";
     return "";
   }
   if(s.type === "stops"){
@@ -257,7 +257,7 @@ $("#wh-back").addEventListener("click",()=>{ if(state.step) go(-1); });
 
 /* ---------- matching ---------- */
 function tripRange(){
-  if(state.mode==="month"){ const a = D(state.month+"-01"); const b = new Date(a.getFullYear(), a.getMonth()+1, 0); return {a, b, byMonth:true}; }
+  if(state.mode==="month"){ const a = D(state.month+"-01"); const eom = new Date(a.getFullYear(), a.getMonth()+1, 0); const n = Number(state.nights)||5; return {a, b: n > daysBetween(a, eom) ? addDays(a, n) : eom, byMonth:true}; }
   return {a:D(state.arrive), b:D(state.depart), byMonth:false};
 }
 const NEAR = {kw:["kw","lower"], lower:["lower","kw"], middle:["middle","lower"], upper:["upper","middle"], road:["kw","lower","middle","upper","road"]};
@@ -319,7 +319,7 @@ function build(){
   const {a, b, byMonth} = tripRange();
   const nights = byMonth ? Number(state.nights) : daysBetween(a,b);
   const near = nearAreas(state.area);
-  TRIP_MONTHS = [...new Set([a.getMonth()+1, b.getMonth()+1])];
+  TRIP_MONTHS = []; for(let d = new Date(a.getFullYear(), a.getMonth(), 1); d <= b; d = new Date(d.getFullYear(), d.getMonth()+1, 1)) TRIP_MONTHS.push(d.getMonth()+1);
   const used = new Set();
   const has = (arr,v) => arr.includes(v);
   const lg = state.party === "lgbtq", fam = state.party === "family";
@@ -339,7 +339,7 @@ function build(){
       else for(let d = new Date(Math.max(D(e.s), a)); d <= b && d <= D(e.e||e.s); d = addDays(d,1)) if(nearOn(d, e.a)){ ok = true; leg = legAt(d); break; }
       return {...e, near: ok, leg}; });
   /* weekly items in range */
-  const days = []; for(let d = new Date(a); d <= b && days.length < 46; d = addDays(d,1)) days.push(new Date(d));
+  const days = []; for(let d = new Date(a); d <= b && days.length < 122; d = addDays(d,1)) days.push(new Date(d));
   const wk = WEEKLY.filter(w => (state.area==="road" || near.includes(w.a)) && !(fam && w.t.includes("drag")) && !(w.t.includes("drag") && !has(state.night,"drag") && !lg && state.night.includes("early")))
     .map(w => ({...w, dates: days.filter(d => (w.d ? w.d.includes(d.getDay()) : (d.getDay()===w.nth[1] && Math.ceil(d.getDate()/7)===w.nth[0])) && (byMonth || !multiStop() || state.area==="road" || nearOn(d, w.a)))}))
     .filter(w => w.dates.length);
@@ -458,12 +458,12 @@ function build(){
       ${bk||e.url||e.tix?`<div class="evact">${bk?`<a class="btn sm" href="${esc(bookUrl(bk))}" target="_blank" rel="noopener sponsored">${esc(bk.n)}: book →</a>`:""}${e.url?`<a class="btn sm${bk?" ghost":""}" href="${esc(e.url)}" target="_blank" rel="noopener">${e.tix?"Get tickets →":"Details →"}</a>`:""}${e.tix&&!e.url&&!bk?`<span class="note">Tickets sell out, so buy ahead.</span>`:""}</div>`:""}</div></div>`;
   };
 
-  const dateLabel = byMonth ? `${MONTHS[a.getMonth()]} ${a.getFullYear()} · ${nights} nights` : `${fmtShort(a)} – ${fmtShort(b)}, ${b.getFullYear()} · ${nights} night${nights>1?"s":""}`;
+  const dateLabel = byMonth ? `${a.getMonth()===b.getMonth()?"":"Starting "}${MONTHS[a.getMonth()]} ${a.getFullYear()} · ${nights} nights` : `${fmtShort(a)} – ${fmtShort(b)}, ${b.getFullYear()} · ${nights} night${nights>1?"s":""}`;
   const seasonNow = SEASONS.filter(s => { const md = iso(a).slice(5); return s.from <= s.to ? (md>=s.from && md<=s.to) : (md>=s.from || md<=s.to); });
   const firstSun = sunset(a), lastSun = sunset(b);
-  const monthLabel = a.getMonth()===b.getMonth() || byMonth ? MONTHS[a.getMonth()] : `${MONTHS[a.getMonth()]}–${MONTHS[b.getMonth()]}`;
+  const monthLabel = a.getMonth()===b.getMonth() ? MONTHS[a.getMonth()] : `${MONTHS[a.getMonth()]}–${MONTHS[b.getMonth()]}`;
   const who = {couple:"you two",family:"your crew",friends:"your crew",celebrate:"the celebration",solo:"you",lgbtq:"you two"}[state.party];
-  const intro = `${nights >= 14 ? "A whole " + (nights>=28?"month":"couple of weeks") + " in the Keys? Lucky " + who + "!" : "Your Keys trip is coming together!"} Here's my insider's guide to the best nights, bites and only-in-the-Keys moments on your dates${evs.length?", including "+evs.length+" event"+(evs.length>1?"s":"")+" happening while you're here":""}.`;
+  const intro = `${nights >= 14 ? "A whole " + (nights>=55?"season":nights>=28?"month":nights>=20?"three weeks":"couple of weeks") + " in the Keys? Lucky " + who + "!" : "Your Keys trip is coming together!"} Here's my insider's guide to the best nights, bites and only-in-the-Keys moments on your dates${evs.length?", including "+evs.length+" event"+(evs.length>1?"s":"")+" happening while you're here":""}.`;
 
   /* calendar grid */
   const calDays = byMonth ? days : days;
@@ -563,7 +563,7 @@ function build(){
   <section class="sec">${chip("Put it all together")}<h2>Your perfect day</h2>
     <div class="day">${perfect.map(([k,v])=>`<div class="slot"><small>${k}</small>${esc(v)}</div>`).join("")}</div></section>
 
-  <section class="sec cal-page"><div class="calhead"><div>${chip("Stick it on the fridge")}<h2>Your <mark>${esc(byMonth?MONTHS[a.getMonth()]+" "+a.getFullYear():monthLabel)}</mark> at a glance</h2></div>
+  <section class="sec cal-page"><div class="calhead"><div>${chip("Stick it on the fridge")}<h2>Your <mark>${esc(byMonth&&a.getMonth()===b.getMonth()?MONTHS[a.getMonth()]+" "+a.getFullYear():monthLabel)}</mark> at a glance</h2></div>
     <div class="legend">${multiStop()&&!byMonth?`<i style="background:var(--ink);color:#fff">Where you're staying</i>`:""}<i style="background:var(--yellow)">Weekly locals' rituals</i><i style="background:var(--cyan)">Shows &amp; concerts</i><i style="background:var(--pink)">Festivals</i><i style="background:var(--lime)">Special events</i></div></div>
     <div class="cal">${DOW.map(d=>`<div class="h">${d}</div>`).join("")}${cells.join("")}</div>
     <p class="fine">Every night: Sunset Celebration at Mallory Square${near.includes("kw")&&!fam?" and drag at 801 Bourbon, 9 &amp; 11 pm":""}. Sunset times are for Key West (a few minutes later up the Keys). Confirm times before you go.</p></section>
