@@ -11,6 +11,7 @@ m.innerHTML="<div id=\"kwsf\">\n<div class=\"kw-wrap\">\n  <p class=\"kw-lede\">
 const HOST_NAME   = "Michele & Kevin";
 const SITE_URL    = "https://funinkeywest.com";
 const NEXT_URL    = "#whats-happening";   /* Link to the "What's Happening While I'm There?" quiz page. Leave empty to hide the box. */
+const GUIDE_URL   = "https://funinkeywest.kit.com/products/custom-key-west-trip-guide";   /* $49 Custom Key West Trip Guide (Kit product) */
 const SIGNUP_URL  = "https://funinkeywest.kit.com/cb52d6c3b6";   /* Kit landing page: "Key West Trip Countdown - Landing Page" */
 const STAY22_AID  = "688a62a4b2767c86413b7786";   /* Your Stay22 affiliate ID. Leave empty and hotel links fall back to a Google search. */
 const STAY22_CAMPAIGN = "stay_finder";
@@ -527,6 +528,7 @@ function showResults(){
       <h2>Now, what's happening while you're there?</h2>
       <p>You've got your place to stay. Next, my second quiz builds your own Keys guide: festivals and shows on your dates, the sunset cruise that fits you, food tours, happy hours, hidden gems and a fridge calendar. I'll carry over your answers.</p>
       <a class="kw-btn" data-next data-area="${state.where&&state.where!=="any"?state.where:""}" data-who="${state.party||""}" data-arrive="${datesOk()?state.checkin:""}" data-depart="${datesOk()?state.checkout:""}" href="${nextLink()}">Plan my days <span aria-hidden="true">→</span></a>
+      <p style="margin:14px 0 0;font-size:15px">Rather have me plan the whole trip for you? <a href="${GUIDE_URL}" target="_blank" rel="noopener" style="font-weight:700;color:inherit;text-decoration:underline">Get my custom guide · $49 →</a></p>
     </div>`:""}
     <div class="kw-cta">
       <div class="kw-eyebrow" style="color:inherit;opacity:.75">Found your place to stay?</div>
