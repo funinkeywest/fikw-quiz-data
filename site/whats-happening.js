@@ -7,6 +7,23 @@ m.innerHTML="<div id=\"fikw-wh\">\n\n<div class=\"wrap\">\n  <div class=\"stripe
 })();
 
 {
+/* ---- Analytics: counts quiz starts, finishes and clicks in your Google Analytics (and Meta pixel) ---- */
+const FIKW_QUIZ = "whats_happening";
+const fikwTrack = (ev, p) => { try { const d = Object.assign({quiz: FIKW_QUIZ}, p || {}); if(typeof window.gtag === "function") window.gtag("event", ev, d); if(typeof window.fbq === "function") window.fbq("trackCustom", ev, d); } catch(e){} };
+let fikwStarted = false;
+document.addEventListener("click", e => {
+  if(!e.target.closest || !e.target.closest("#fikw-wh")) return;
+  if(!fikwStarted && e.target.closest(".opt")){ fikwStarted = true; fikwTrack("quiz_start"); }
+  const a = e.target.closest("a[href]"); if(!a) return;
+  const h = a.href || "", text = (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 80);
+  let host = ""; try { host = new URL(h).hostname; } catch(err){}
+  if(/custom-key-west-trip-guide/.test(h)) fikwTrack("custom_guide_click");
+  else if(/insider-club/.test(h)) fikwTrack("insider_club_click");
+  else if(a.hasAttribute("data-next") || /#whats-happening$/.test(h)) fikwTrack("plan_rest_of_trip_click");
+  else if(/sponsored/.test(a.rel || "") || /fareharbor|stay22|trustedtours|\/conch\//i.test(h)) fikwTrack("booking_click", {link_text: text, link_domain: host});
+  else if(host && !/funinkeywest\.com$/.test(host)) fikwTrack("outbound_click", {link_text: text, link_domain: host});
+}, true);
+let fikwFirstBuild = true;
 /* ---------------- Your details: edit these lines ---------------- */
 const SITE_URL   = "https://funinkeywest.com";
 const STAY_URL   = "#stay-finder";   /* Stay Finder page, for people who haven't booked yet */
@@ -316,6 +333,7 @@ function rhythmLabel(w){
 
 /* ---------- build results ---------- */
 function build(){
+  fikwTrack(fikwFirstBuild && typeof restoredPlan !== "undefined" && restoredPlan ? "guide_reopened" : "quiz_complete", {area: state.stops && state.stops.length ? state.stops.map(x => x.a).join("+") : (state.area || ""), party: state.party || "", mode: state.mode || "", nights: String(state.mode === "dates" ? totalNights() : (state.nights || ""))}); fikwFirstBuild = false;
   const {a, b, byMonth} = tripRange();
   const nights = byMonth ? Number(state.nights) : daysBetween(a,b);
   const near = nearAreas(state.area);
@@ -603,8 +621,8 @@ function build(){
   $("#wh-restart").addEventListener("click", () => { Object.assign(state,{step:0,area:null,stops:[],party:null,first:null,sunset:null,water:[],food:[],night:[],gems:[],occasion:null,spend:null}); el.hidden = true; $("#wh-quiz").hidden = false; $("#wh-intro").hidden = false; renderStep(); ROOT.scrollIntoView({behavior:"smooth"}); });
   if(!GUIDE_OFFER.url) $("#wh-guideBtn").addEventListener("click", ev => { ev.preventDefault(); location.href = `mailto:${GUIDE_OFFER.email}?subject=${encodeURIComponent("Custom Keys guide: "+dateLabel)}&body=${encodeURIComponent("Hi Michele! I'd love a custom guide.\n\n"+summaryTags().join(", ")+"\n\n")}`; });
   if(ON_SITE){
-    $("#wh-printPlan").addEventListener("click", () => window.print());
-    $("#wh-icsPlan").addEventListener("click", () => {
+    $("#wh-printPlan").addEventListener("click", () => { fikwTrack("print_guide"); window.print(); });
+    $("#wh-icsPlan").addEventListener("click", () => { fikwTrack("calendar_download");
       const lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Fun in Key West//Whats Happening//EN"];
       const stamp = new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
       evs.filter(e=>e.near).forEach((e,i) => { const end = iso(addDays(D(e.e||e.s),1)).replace(/-/g,"");
@@ -621,7 +639,7 @@ function build(){
         if($("#wh-firstName").value.trim()) fd.append("first_name", $("#wh-firstName").value.trim());
         fd.append("fields[trip_guide_link]", planLink()); fd.append("fields[trip_start]", iso(a)); fd.append("fields[trip_area]", areaName());
         const r = await fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`, {method:"POST", body:fd, headers:{Accept:"application/json"}});
-        msg.textContent = r.ok ? "You're in! Check your inbox for your guide. (If you don't see it in a few minutes, peek in Promotions or Spam.)" : "Hmm, that didn't go through. Try again?"; }
+        if(r.ok) fikwTrack("guide_email_signup"); msg.textContent = r.ok ? "You're in! Check your inbox for your guide. (If you don't see it in a few minutes, peek in Promotions or Spam.)" : "Hmm, that didn't go through. Try again?"; }
       catch(e){ msg.textContent = "Hmm, that didn't go through. Try again?"; }
       btn.disabled = false; });
   }

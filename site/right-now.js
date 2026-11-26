@@ -7,6 +7,23 @@ m.innerHTML="<div id=\"fikw-rn\">\n  <div class=\"rn-box\">\n    <div class=\"rn
 })();
 
 (() => {
+/* ---- Analytics: counts quiz starts, finishes and clicks in your Google Analytics (and Meta pixel) ---- */
+const FIKW_QUIZ = "right_now";
+const fikwTrack = (ev, p) => { try { const d = Object.assign({quiz: FIKW_QUIZ}, p || {}); if(typeof window.gtag === "function") window.gtag("event", ev, d); if(typeof window.fbq === "function") window.fbq("trackCustom", ev, d); } catch(e){} };
+let fikwStarted = false;
+document.addEventListener("click", e => {
+  if(!e.target.closest || !e.target.closest("#fikw-rn")) return;
+  if(!fikwStarted && e.target.closest(".rn-opt")){ fikwStarted = true; fikwTrack("quiz_start"); }
+  const a = e.target.closest("a[href]"); if(!a) return;
+  const h = a.href || "", text = (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 80);
+  let host = ""; try { host = new URL(h).hostname; } catch(err){}
+  if(/custom-key-west-trip-guide/.test(h)) fikwTrack("custom_guide_click");
+  else if(/insider-club/.test(h)) fikwTrack("insider_club_click");
+  else if(a.hasAttribute("data-next") || /#whats-happening$/.test(h)) fikwTrack("plan_rest_of_trip_click");
+  else if(/sponsored/.test(a.rel || "") || /fareharbor|stay22|trustedtours|\/conch\//i.test(h)) fikwTrack("booking_click", {link_text: text, link_domain: host});
+  else if(host && !/funinkeywest\.com$/.test(host)) fikwTrack("outbound_click", {link_text: text, link_domain: host});
+}, true);
+let fikwFirstBuild = true;
 /* ---------------- Settings ---------------- */
 const SITE_URL = "https://funinkeywest.com";
 const PAGE_URL = "https://funinkeywest.com/find-your-key-west/";
@@ -187,6 +204,7 @@ function readCode(c){
 function shareLink(){ return `${PAGE_URL}?now=${encodeURIComponent(planCode())}#right-now`; }
 
 function build(scroll){
+  fikwTrack(fikwFirstBuild && !scroll ? "plan_reopened" : "quiz_complete", {when: state.when || "", where: state.where || "", party: state.who || "", mood: state.mood.join("+")}); fikwFirstBuild = false;
   const now = keysNow();
   const day = state.when === "tomorrow" ? addDays(now.date, 1) : now.date;
   const slots = slotsFor(state.when, now);
@@ -248,7 +266,7 @@ function build(scroll){
     root.scrollIntoView({behavior:"smooth", block:"start"});
   });
   const tm = r.querySelector("[data-tomorrow]"); if(tm) tm.addEventListener("click", () => { state.when = "tomorrow"; build(true); });
-  r.querySelector("[data-share]").addEventListener("click", async () => {
+  r.querySelector("[data-share]").addEventListener("click", async () => { fikwTrack("share_plan");
     const url = shareLink(), out = r.querySelector("[data-shared]");
     try {
       if(navigator.share){ await navigator.share({title:"Our Keys plan", text:"Here's what we're doing in the Keys:", url}); return; }

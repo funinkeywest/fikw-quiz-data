@@ -7,6 +7,22 @@ m.innerHTML="<div id=\"kwsf\">\n<div class=\"kw-wrap\">\n  <p class=\"kw-lede\">
 })();
 
 (function(){
+/* ---- Analytics: counts quiz starts, finishes and clicks in your Google Analytics (and Meta pixel) ---- */
+const FIKW_QUIZ = "stay_finder";
+const fikwTrack = (ev, p) => { try { const d = Object.assign({quiz: FIKW_QUIZ}, p || {}); if(typeof window.gtag === "function") window.gtag("event", ev, d); if(typeof window.fbq === "function") window.fbq("trackCustom", ev, d); } catch(e){} };
+let fikwStarted = false;
+document.addEventListener("click", e => {
+  if(!e.target.closest || !e.target.closest("#kwsf")) return;
+  if(!fikwStarted && e.target.closest(".kw-opt")){ fikwStarted = true; fikwTrack("quiz_start"); }
+  const a = e.target.closest("a[href]"); if(!a) return;
+  const h = a.href || "", text = (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 80);
+  let host = ""; try { host = new URL(h).hostname; } catch(err){}
+  if(/custom-key-west-trip-guide/.test(h)) fikwTrack("custom_guide_click");
+  else if(/insider-club/.test(h)) fikwTrack("insider_club_click");
+  else if(a.hasAttribute("data-next") || /#whats-happening$/.test(h)) fikwTrack("plan_rest_of_trip_click");
+  else if(/sponsored/.test(a.rel || "") || /fareharbor|stay22|trustedtours|\/conch\//i.test(h)) fikwTrack("booking_click", {link_text: text, link_domain: host});
+  else if(host && !/funinkeywest\.com$/.test(host)) fikwTrack("outbound_click", {link_text: text, link_domain: host});
+}, true);
 /* ---- Your details: edit these lines ---- */
 const HOST_NAME   = "Michele & Kevin";
 const SITE_URL    = "https://funinkeywest.com";
@@ -483,6 +499,7 @@ function labelsSummary(){
 
 let lastRanked = [];
 function showResults(){
+  fikwTrack("quiz_complete", {where: state.where || "", party: state.party || "", budget: String(state.budget || ""), style: state.style || ""});
   const ranked = rank();
   lastRanked = ranked;
   const top = ranked.slice(0,3), more = ranked.slice(3,8);
